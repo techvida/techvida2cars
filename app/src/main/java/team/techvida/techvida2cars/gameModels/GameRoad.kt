@@ -2,6 +2,7 @@ package team.techvida.techvida2cars.gameModels
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.widget.FrameLayout
 
 class GameRoad : FrameLayout {
@@ -19,6 +20,7 @@ class GameRoad : FrameLayout {
     val car = Car(context)
 
     var roadRatio = 0f
+    var verticalMoveStep = 0f
 
     var leftSide = 0f
     var rightSide = 0f
@@ -31,12 +33,21 @@ class GameRoad : FrameLayout {
         addView(car)
     }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        if (event.action == MotionEvent.ACTION_DOWN)
+            car.changeSide()
+
+        return super.onTouchEvent(event)
+    }
+
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 
         hurdleSize = width / 5f
         carSize = width / 3f
 
+        verticalMoveStep = height / 250f
 
         roadRatio = width / 4f
 
@@ -45,7 +56,6 @@ class GameRoad : FrameLayout {
 
         car.init(roadRatio, carSize, height - carSize * 2)
 
-        initHurdles()
     }
 
     fun initHurdles() {
@@ -66,13 +76,31 @@ class GameRoad : FrameLayout {
 
             hurdle.size = hurdleSize
             hurdle.roadRatio = roadRatio
-            hurdle.centerY = ((i * hurdleDistance - height / 2).toFloat())
+            val centerY = ((i * hurdleDistance - height / 2).toFloat())
 
             hurdle.refreshHurdle()
 
-            hurdle.refreshPosition()
+            hurdle.refreshTop(centerY)
 
+            hurdles.add(hurdle)
             addView(hurdle)
+        }
+
+    }
+
+    fun startOrRestartGame() {
+        initHurdles()
+
+    }
+
+    fun setNewState() {
+        for (hurdle in hurdles) {
+            hurdle.refreshTop(hurdle.centerY + verticalMoveStep)
+
+            if (hurdle.centerY > height) {
+                hurdle.refreshTop(hurdleSize * -1)
+                hurdle.refreshHurdle()
+            }
         }
 
     }
