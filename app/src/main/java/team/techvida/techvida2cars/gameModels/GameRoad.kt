@@ -2,8 +2,10 @@ package team.techvida.techvida2cars.gameModels
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import kotlin.math.abs
 
 class GameRoad : FrameLayout {
     constructor(context: Context) : super(context)
@@ -101,6 +103,32 @@ class GameRoad : FrameLayout {
                 hurdle.refreshTop(hurdleSize * -1)
                 hurdle.refreshHurdle()
             }
+
+            val verticalDistance = car.centerY - hurdle.centerY
+            val horizontalDistance = car.centerX - hurdle.centerX
+
+            val carTouchSeverity = carSize * 0.7
+            val hurdleTouchSeverity = carSize * 0.7
+
+
+            if (verticalDistance < carTouchSeverity * -1) {
+                if (hurdle.isScore) {
+                    /// lose
+                    Log.i("TAG", "state:LOSE : UnUsed score ")
+                }
+            } else if (abs(verticalDistance) < carTouchSeverity && abs(horizontalDistance) < hurdleTouchSeverity) {
+
+                if (hurdle.isScore && !hurdle.isUsed) {
+                    /// score
+                    hurdle.isUsed = true
+                    Log.i("TAG", "state: SCORE")
+                } else if (!hurdle.isScore) {
+                    /// lose
+                    Log.i("TAG", "state: LOSE")
+                }
+            }
+
+
         }
 
     }

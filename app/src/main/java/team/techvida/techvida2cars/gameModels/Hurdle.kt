@@ -19,6 +19,7 @@ class Hurdle(context: Context) : AppCompatImageView(context) {
 
     var roadRunway: RoadRunway = RoadRunway.Left
 
+    var isUsed = false
 
     fun refreshTop(centerY: Float) {
 
@@ -43,6 +44,8 @@ class Hurdle(context: Context) : AppCompatImageView(context) {
 
         val position = if (roadRunway == RoadRunway.Left) 1 else 3
         centerX = position * roadRatio
+
+        isUsed = false
 
     }
 }
