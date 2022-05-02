@@ -60,7 +60,7 @@ class GameRoad : FrameLayout {
 
     }
 
-    fun initHurdles() {
+    fun initHurdles(isSomeAhead: Boolean) {
 
         if (hurdles.size > 0)
             for (hurdle in hurdles) {
@@ -78,7 +78,8 @@ class GameRoad : FrameLayout {
 
             hurdle.size = hurdleSize
             hurdle.roadRatio = roadRatio
-            val centerY = ((i * hurdleDistance - height / 2).toFloat())
+            val centerY =
+                ((i * hurdleDistance - height / 2 + if (isSomeAhead) hurdleDistance / 2 else 0).toFloat())
 
             hurdle.refreshHurdle()
 
@@ -90,8 +91,11 @@ class GameRoad : FrameLayout {
 
     }
 
-    fun startOrRestartGame() {
-        initHurdles()
+    fun startOrRestartGame(index: Int) {
+        if (index == 1) {// it is  second road
+            initHurdles(true)
+        } else
+            initHurdles(false)
 
     }
 

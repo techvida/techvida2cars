@@ -16,8 +16,8 @@ class Game {
     suspend fun startOrRestartGame() {
         isGameRunning = true
 
-        for (road in roads) {
-            road.startOrRestartGame()
+        for ((index, road) in roads.withIndex()) {
+            road.startOrRestartGame(index)
         }
 
         gameEngine().start()
@@ -39,7 +39,6 @@ class Game {
             delay(10 * 1000L)
         }
     }
-
 
 
 }
